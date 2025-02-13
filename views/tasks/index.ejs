@@ -1,0 +1,9 @@
+<% layout('layouts/boilerplate.ejs') %>
+
+<body>
+    <h1>タスク一覧</h1>
+    <ul>
+        <% tasks.forEach((task) => { %>
+            <li><a href="/tasks/<%= task._id %>"><%= task.title %></a></li>
+        <% }); %>
+</body>

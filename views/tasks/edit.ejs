@@ -1,0 +1,30 @@
+<% layout('layouts/boilerplate.ejs') %>
+<h1>タスク編集</h1>
+<form action="/tasks/<%= task._id %>?_method=PATCH" method="post">
+    <div>
+        <label for="title">タイトル</label>
+        <input
+            type="text"
+            id="title"
+            name="task[title]"
+            value="<%= task.title %>"
+            required
+        />
+    </div>
+    <div>
+        <label for="description">詳細</label>
+        <textarea id="description" name="task[description]">
+<%= task.description %></textarea
+        >
+    </div>
+    <div>
+        <label>ステータス</label>
+        <% for (const [key, value] of Object.entries(taskStatus)) { %>
+        <label>
+            <input type="radio" name="task[status]" value="<%= value %>" <%= task.status === value ? "checked" : "" %> />
+            <%= value %>
+        </label>
+        <% } %>
+    <button type="submit">更新</button>
+    <a href="/tasks/<%= task._id %>">キャンセル</a>
+</form>
