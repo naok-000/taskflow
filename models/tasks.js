@@ -15,6 +15,10 @@ const taskSchema = new Schema({
         enum: Object.values(taskStatus),
         default: taskStatus.NOT_STARTED,
     },
+    project: {
+        type: Schema.Types.ObjectId,
+        ref: "Project",
+    },
 });
 
 module.exports = mongoose.model("Task", taskSchema);

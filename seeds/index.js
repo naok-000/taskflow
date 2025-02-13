@@ -2,6 +2,7 @@
 // MongoDBに接続し、シードデータを挿入する
 const mongoose = require("mongoose");
 const Task = require("../models/tasks");
+const Project = require("../models/projects");
 
 // MongoDBに接続
 mongoose
@@ -14,24 +15,81 @@ mongoose
         console.log(err);
     });
 
-const tasks = [
+const projectsData = [
     {
-        title: "Task 1",
+        title: "Project 1",
         description: "Description 1",
     },
     {
-        title: "Task 2",
+        title: "Project 2",
         description: "Description 2",
     },
     {
-        title: "Task 3",
+        title: "Project 3",
         description: "Description 3",
     },
 ];
 
+const tasksListData = [
+    [
+        {
+            title: "Project1 - Task 1",
+            description: "Description 1",
+        },
+        {
+            title: "Project1 - Task 2",
+            description: "Description 2",
+        },
+        {
+            title: "Project1 - Task 3",
+            description: "Description 3",
+        },
+    ],
+    [
+        {
+            title: "Project2 - Task 1",
+            description: "Description 1",
+        },
+        {
+            title: "Project2 - Task 2",
+            description: "Description 2",
+        },
+        {
+            title: "Project2 - Task 3",
+            description: "Description 3",
+        },
+    ],
+    [
+        {
+            title: "Project3 - Task 1",
+            description: "Description 1",
+        },
+        {
+            title: "Project3 - Task 2",
+            description: "Description 2",
+        },
+        {
+            title: "Project3 - Task 3",
+            description: "Description 3",
+        },
+    ],
+];
+
 const seedDB = async () => {
+    await Project.deleteMany({});
     await Task.deleteMany({});
-    await Task.insertMany(tasks);
+    let index = 0;
+    for (const projectData of projectsData) {
+        const tasksData = tasksListData[index];
+        const project = new Project(projectData);
+        await project.save();
+        for (const taskData of tasksData) {
+            const task = new Task(taskData);
+            task.project = project;
+            await task.save();
+        }
+        index++;
+    }
 };
 
 seedDB().then(() => {

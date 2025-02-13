@@ -22,10 +22,16 @@
                         >ホーム</a
                     >
                     <a
+                        class="nav-link <%= currentRoute === '/projects' ? 'active' : '' %>"
+                        aria-current="<%= currentRoute === '/projects' ? 'page' : '' %>"
+                        href="/projects"
+                        >プロジェクト一覧</a
+                    >
+                    <a
                         class="nav-link <%= currentRoute === '/tasks' ? 'active' : '' %>"
                         aria-current="<%= currentRoute === '/tasks' ? 'page' : '' %>"
                         href="/tasks"
-                        >タスク一覧</a
+                        >すべてのタスク</a
                     >
                 </div>
             </div>

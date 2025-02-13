@@ -1,0 +1,103 @@
+<% layout('layouts/boilerplate.ejs') %>
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header">プロジェクト詳細</div>
+        <div class="card-body">
+            <!-- プロジェクト情報 -->
+            <h5 class="card-title"><%= project.title %></h5>
+            <p class="card-text"><%= project.description %></p>
+
+            <!-- 新規タスク追加フォーム -->
+            <div class="mb-4">
+                <button
+                    class="btn btn-success"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#newTaskForm"
+                    aria-expanded="false"
+                    aria-controls="newTaskForm"
+                >
+                    新規タスク追加
+                </button>
+            </div>
+            <div class="collapse mb-4" id="newTaskForm">
+                <div class="card card-body">
+                    <h6 class="mb-3">新規タスク</h6>
+                    <form
+                        action="/projects/<%= project._id %>/tasks"
+                        method="post"
+                        class="needs-validation"
+                        novalidate
+                    >
+                        <div class="mb-3">
+                            <label for="taskTitle" class="form-label"
+                                >タイトル</label
+                            >
+                            <input
+                                type="text"
+                                id="taskTitle"
+                                name="task[title]"
+                                class="form-control"
+                                required
+                            />
+                            <div class="invalid-feedback">
+                                タイトルを入力してください
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="taskDescription" class="form-label"
+                                >詳細</label
+                            >
+                            <textarea
+                                id="taskDescription"
+                                name="task[description]"
+                                class="form-control"
+                                rows="3"
+                            ></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            追加
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- タスク一覧 -->
+            <% if (tasks && tasks.length > 0) { %>
+            <hr />
+            <h6 class="mb-3">タスク一覧</h6>
+            <div class="list-group">
+                <% tasks.forEach(function(task) { %>
+                <a
+                    href="/tasks/<%= task._id %>"
+                    class="list-group-item list-group-item-action"
+                >
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1"><%= task.title %></h5>
+                        <small class="text-muted"><%= task.status %></small>
+                    </div>
+                    <p class="mb-1"><%= task.description %></p>
+                </a>
+                <% }); %>
+            </div>
+            <% } else { %>
+            <p class="mt-3">タスクは登録されていません。</p>
+            <% } %>
+        </div>
+        <div class="card-footer bg-transparent">
+            <a
+                href="/projects/<%= project._id %>/edit"
+                class="btn btn-primary me-2"
+            >
+                編集する
+            </a>
+            <form
+                action="/projects/<%= project._id %>?_method=DELETE"
+                method="POST"
+                class="d-inline"
+            >
+                <button type="submit" class="btn btn-danger">削除する</button>
+            </form>
+        </div>
+    </div>
+</div>

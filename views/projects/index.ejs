@@ -1,0 +1,73 @@
+<% layout('layouts/boilerplate.ejs') %>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="fw-bold">プロジェクト一覧</h1>
+        <button
+            class="btn btn-success"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#newProjectForm"
+            aria-expanded="false"
+            aria-controls="newProjectForm"
+        >
+            プロジェクト新規登録
+        </button>
+    </div>
+    <div class="collapse mb-4" id="newProjectForm">
+        <div class="card">
+            <div class="card-header">新規プロジェクト登録</div>
+            <div class="card-body">
+                <form
+                    action="/projects"
+                    method="post"
+                    class="needs-validation"
+                    novalidate
+                >
+                    <div class="mb-3">
+                        <label for="title" class="form-label"
+                            >プロジェクト名</label
+                        >
+                        <input
+                            type="text"
+                            id="title"
+                            name="project[title]"
+                            class="form-control"
+                            required
+                        />
+                        <div class="valid-feedback">OK!</div>
+                        <div class="invalid-feedback">
+                            プロジェクト名を入力してください
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">詳細</label>
+                        <textarea
+                            id="description"
+                            name="project[description]"
+                            class="form-control"
+                            rows="3"
+                        ></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">登録</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        <% projects.forEach((project) => { %>
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title"><%= project.title %></h5>
+                    <p class="card-text"><%= project.description %></p>
+                </div>
+                <div class="card-footer bg-transparent border-top-0">
+                    <a href="/projects/<%= project._id %>" class="btn btn-info">
+                        詳細を見る
+                    </a>
+                </div>
+            </div>
+        </div>
+        <% }); %>
+    </div>
+</div>

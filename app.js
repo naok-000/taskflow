@@ -13,6 +13,8 @@ const catchAsync = require("./utils/catchAsync");
 const { validateTask } = require("./middlewares");
 const Task = require("./models/tasks");
 const taskStatus = require("./constants/taskStatus");
+const tasksRoutes = require("./routes/tasks");
+const projectsRoutes = require("./routes/projects");
 
 const app = express();
 const port = 3000;
@@ -59,67 +61,8 @@ app.get("/", (req, res) => {
     res.render("home");
 });
 
-app.get(
-    "/tasks",
-    catchAsync(async (req, res) => {
-        const tasks = await Task.find({});
-        res.render("tasks/index", { tasks });
-    })
-);
-
-app.post(
-    "/tasks",
-    validateTask,
-    catchAsync(async (req, res) => {
-        const task = new Task(req.body.task);
-        await task.save();
-        res.redirect("/tasks");
-    })
-);
-
-app.get(
-    "/tasks/:id",
-    catchAsync(async (req, res) => {
-        const id = req.params.id;
-        const task = await Task.findById(id);
-        if (!task) {
-            req.flash("error", "タスクが見つかりません");
-            return res.redirect("/tasks");
-        }
-        res.render("tasks/show", { task });
-    })
-);
-
-app.get(
-    "/tasks/:id/edit",
-    catchAsync(async (req, res) => {
-        const id = req.params.id;
-        const task = await Task.findById(id);
-        res.render("tasks/edit", { task, taskStatus });
-    })
-);
-
-app.patch(
-    "/tasks/:id",
-    validateTask,
-    catchAsync(async (req, res) => {
-        const id = req.params.id;
-        const task = await Task.findByIdAndUpdate(id, req.body.task, {
-            runValidators: true,
-            new: true,
-        });
-        res.redirect(`/tasks/${task._id}`);
-    })
-);
-
-app.delete(
-    "/tasks/:id",
-    catchAsync(async (req, res) => {
-        const id = req.params.id;
-        await Task.findByIdAndDelete(id);
-        res.redirect("/tasks");
-    })
-);
+app.use("/tasks", tasksRoutes);
+app.use("/projects", projectsRoutes);
 
 app.all("*", (req, res, next) => {
     next(new ExpressError("ページが見つかりません", 404));
