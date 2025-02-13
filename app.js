@@ -30,6 +30,12 @@ app.set("views", path.join(__dirname, "views")); // テンプレートファイ�
 app.use(express.static("public")); // 静的ファイルのディレクトリを指定
 app.use(express.urlencoded({ extended: true })); // フォームデータを解析するミドルウェア
 app.use(methodOverride("_method")); // HTTPメソッドを上書きするミドルウェア
+app.use(express.static(path.join(__dirname, "public"))); // 静的ファイルのディレクトリを指定
+
+app.use((req, res, next) => {
+    res.locals.currentRoute = req.path;
+    next();
+});
 
 app.get("/", (req, res) => {
     res.render("home");
@@ -38,10 +44,6 @@ app.get("/", (req, res) => {
 app.get("/tasks", async (req, res) => {
     const tasks = await Task.find({});
     res.render("tasks/index", { tasks });
-});
-
-app.get("/tasks/new", (req, res) => {
-    res.render("tasks/new");
 });
 
 app.post("/tasks", async (req, res) => {
