@@ -1,26 +1,51 @@
 <% layout('layouts/boilerplate.ejs') %>
 <div class="container mt-4">
-    <div class="card shadow">
-        <div class="card-header">すべてのタスク</div>
-        <div class="card-body">
-            <!-- タスク一覧 -->
-            <% if (tasks && tasks.length > 0) { %>
-            <div class="list-group">
-                <% tasks.forEach(function(task) { %>
-                <a
-                    href="/tasks/<%= task._id %>"
-                    class="list-group-item list-group-item-action"
-                >
-                    <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1"><%= task.title %></h5>
-                        <small class="text-muted"><%= task.status %></small>
-                    </div>
-                    <p class="mb-1"><%= task.description %></p>
-                </a>
-                <% }); %>
+    <h1 class="mb-4">すべてのタスク</h1>
+    <!-- Bootstrapタブ -->
+    <%- include('../partials/navtabs.ejs') %>
+    <div class="tab-content mt-3">
+        <!-- すべてのタスク -->
+        <div class="tab-pane fade show active" id="allTasks" role="tabpanel">
+            <% if (tasks.length) { %>
+            <div class="list-group mt-3">
+                <% tasks.forEach(task => { %> <%-
+                include('taskAccordionItem.ejs', { task }) %> <% }); %>
             </div>
             <% } else { %>
-            <p class="mt-3">タスクリストは空です。</p>
+            <p>タスクが登録されていません。</p>
+            <% } %>
+        </div>
+        <div class="tab-pane fade" id="notStarted" role="tabpanel">
+            <% if (notStarted.length) { %>
+            <div class="list-group mt-3">
+                <% notStarted.forEach(task => { %> <%-
+                include('taskAccordionItem.ejs',{task}) %> <% }); %>
+            </div>
+
+            <% } else { %>
+            <p>未着手のタスクはありません。</p>
+            <% } %>
+        </div>
+        <div class="tab-pane fade" id="inProgress" role="tabpanel">
+            <% if (inProgress.length) { %>
+
+            <div class="list-group mt-3">
+                <% inProgress.forEach(task => { %> <%-
+                include('taskAccordionItem.ejs',{task}) %> <% }); %>
+            </div>
+            <% } else { %>
+            <p>進行中のタスクはありません。</p>
+            <% } %>
+        </div>
+        <div class="tab-pane fade" id="completed" role="tabpanel">
+            <% if (completed.length) { %>
+            <!-- アコーディオン -->
+            <div class="list-group mt-3">
+                <% completed.forEach(task => { %> <%-
+                include('taskAccordionItem.ejs',{task}) %> <% }); %>
+            </div>
+            <% } else { %>
+            <p>完了したタスクはありません。</p>
             <% } %>
         </div>
     </div>

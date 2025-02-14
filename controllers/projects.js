@@ -1,5 +1,6 @@
 const Project = require("../models/projects");
 const Task = require("../models/tasks");
+const taskStatus = require("../constants/taskStatus");
 
 module.exports.index = async (req, res) => {
     const projects = await Project.find({});
@@ -16,11 +17,26 @@ module.exports.showProject = async (req, res) => {
     const projectId = req.params.projectId;
     const project = await Project.findById(projectId);
     const tasks = await Task.find({ project: projectId });
+    const notStarted = tasks.filter(
+        (task) => task.status === taskStatus.NOT_STARTED
+    );
+    const inProgress = tasks.filter(
+        (task) => task.status === taskStatus.IN_PROGRESS
+    );
+    const completed = tasks.filter(
+        (task) => task.status === taskStatus.COMPLETED
+    );
     if (!project) {
         req.flash("error", "プロジェクトが見つかりません");
         return res.redirect("/projects");
     }
-    res.render("projects/show", { project, tasks });
+    res.render("projects/show", {
+        project,
+        tasks,
+        notStarted,
+        inProgress,
+        completed,
+    });
 };
 
 module.exports.renderEditForm = async (req, res) => {

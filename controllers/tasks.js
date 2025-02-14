@@ -2,8 +2,17 @@ const Task = require("../models/tasks");
 const taskStatus = require("../constants/taskStatus");
 
 module.exports.index = async (req, res) => {
-    const tasks = await Task.find({});
-    res.render("tasks/index", { tasks });
+    const tasks = await Task.find({}).populate("project");
+    const notStarted = tasks.filter(
+        (task) => task.status === taskStatus.NOT_STARTED
+    );
+    const inProgress = tasks.filter(
+        (task) => task.status === taskStatus.IN_PROGRESS
+    );
+    const completed = tasks.filter(
+        (task) => task.status === taskStatus.COMPLETED
+    );
+    res.render("tasks/index", { tasks, notStarted, inProgress, completed });
 };
 
 module.exports.showTask = async (req, res) => {
@@ -13,7 +22,7 @@ module.exports.showTask = async (req, res) => {
         req.flash("error", "タスクが見つかりません");
         return res.redirect("/tasks");
     }
-    res.render("tasks/show", { task });
+    res.render("tasks/show", { task, taskStatus });
 };
 
 module.exports.renderEditForm = async (req, res) => {
@@ -28,7 +37,7 @@ module.exports.updateTask = async (req, res) => {
         runValidators: true,
         new: true,
     });
-    res.redirect(`/tasks/${task._id}`);
+    res.redirect(`/projects/${task.project._id}`);
 };
 
 module.exports.deleteTask = async (req, res) => {

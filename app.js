@@ -51,6 +51,7 @@ app.use(session(sessionConfig)); // セッションを有効にする
 app.use(flash()); // フラッシュメッセージを有効にする
 
 app.use((req, res, next) => {
+    res.locals.taskStatus = taskStatus;
     res.locals.currentRoute = req.path;
     res.locals.success = req.flash("success");
     res.locals.error = req.flash("error");

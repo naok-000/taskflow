@@ -51,7 +51,10 @@
                     <% }); %>
                 </div>
                 <button type="submit" class="btn btn-primary">更新</button>
-                <a href="/tasks/<%= task._id %>" class="btn btn-secondary ms-2">
+                <a
+                    href="/projects/<%= task.project._id %>"
+                    class="btn btn-secondary ms-2"
+                >
                     キャンセル
                 </a>
             </form>
