@@ -1,52 +1,25 @@
 <% layout('layouts/boilerplate.ejs') %>
 <div class="container mt-4">
     <h1 class="mb-4">すべてのタスク</h1>
-    <!-- Bootstrapタブ -->
-    <%- include('../partials/navtabs.ejs') %>
     <div class="tab-content mt-3">
-        <!-- すべてのタスク -->
-        <div class="tab-pane fade show active" id="allTasks" role="tabpanel">
-            <% if (tasks.length) { %>
-            <div class="list-group mt-3">
-                <% tasks.forEach(task => { %> <%-
-                include('taskAccordionItem.ejs', { task }) %> <% }); %>
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            <div class="col">
+                <%- include('../partials/taskCard.ejs', { tasks:inProgress,
+                status: taskStatus.IN_PROGRESS, includeProjectName: true }) %>
             </div>
-            <% } else { %>
-            <p>タスクが登録されていません。</p>
-            <% } %>
-        </div>
-        <div class="tab-pane fade" id="notStarted" role="tabpanel">
-            <% if (notStarted.length) { %>
-            <div class="list-group mt-3">
-                <% notStarted.forEach(task => { %> <%-
-                include('taskAccordionItem.ejs',{task}) %> <% }); %>
+            <div class="col">
+                <div class="col">
+                    <%- include('../partials/taskCard.ejs', { tasks:notStarted,
+                    status: taskStatus.NOT_STARTED, includeProjectName: true })
+                    %>
+                </div>
             </div>
-
-            <% } else { %>
-            <p>未着手のタスクはありません。</p>
-            <% } %>
-        </div>
-        <div class="tab-pane fade" id="inProgress" role="tabpanel">
-            <% if (inProgress.length) { %>
-
-            <div class="list-group mt-3">
-                <% inProgress.forEach(task => { %> <%-
-                include('taskAccordionItem.ejs',{task}) %> <% }); %>
+            <div class="col">
+                <div class="col">
+                    <%- include('../partials/taskCard.ejs', { tasks:completed,
+                    status: taskStatus.COMPLETED, includeProjectName: true }) %>
+                </div>
             </div>
-            <% } else { %>
-            <p>進行中のタスクはありません。</p>
-            <% } %>
-        </div>
-        <div class="tab-pane fade" id="completed" role="tabpanel">
-            <% if (completed.length) { %>
-            <!-- アコーディオン -->
-            <div class="list-group mt-3">
-                <% completed.forEach(task => { %> <%-
-                include('taskAccordionItem.ejs',{task}) %> <% }); %>
-            </div>
-            <% } else { %>
-            <p>完了したタスクはありません。</p>
-            <% } %>
         </div>
     </div>
 </div>

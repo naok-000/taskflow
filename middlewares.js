@@ -22,3 +22,8 @@ module.exports.validateProject = (req, res, next) => {
         next();
     }
 };
+
+module.exports.saveReturnTo = (req, res, next) => {
+    req.session.returnTo = req.originalUrl;
+    next();
+};

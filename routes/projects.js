@@ -1,7 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const catchAsync = require("../utils/catchAsync");
-const { validateProject, validateTask } = require("../middlewares");
+const {
+    validateProject,
+    validateTask,
+    saveReturnTo,
+} = require("../middlewares");
 const projectsControllers = require("../controllers/projects");
 
 router
@@ -11,7 +15,7 @@ router
 
 router
     .route("/:projectId")
-    .get(catchAsync(projectsControllers.showProject))
+    .get(saveReturnTo, catchAsync(projectsControllers.showProject))
     .patch(validateProject, catchAsync(projectsControllers.updateProject))
     .delete(catchAsync(projectsControllers.deleteProject));
 

@@ -1,0 +1,45 @@
+<div class="mb-4">
+    <button
+        class="btn btn-success"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#newTaskForm"
+        aria-expanded="false"
+        aria-controls="newTaskForm"
+    >
+        新規タスク追加
+    </button>
+</div>
+<div class="collapse mb-4" id="newTaskForm">
+    <div class="card card-body">
+        <h6 class="mb-3">新規タスク</h6>
+        <form
+            action="/projects/<%= project._id %>/tasks"
+            method="post"
+            class="needs-validation"
+            novalidate
+        >
+            <div class="mb-3">
+                <label for="taskTitle" class="form-label">タイトル</label>
+                <input
+                    type="text"
+                    id="taskTitle"
+                    name="task[title]"
+                    class="form-control"
+                    required
+                />
+                <div class="invalid-feedback">タイトルを入力してください</div>
+            </div>
+            <div class="mb-3">
+                <label for="taskDescription" class="form-label">詳細</label>
+                <textarea
+                    id="taskDescription"
+                    name="task[description]"
+                    class="form-control"
+                    rows="3"
+                ></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">追加</button>
+        </form>
+    </div>
+</div>

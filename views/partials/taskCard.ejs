@@ -1,0 +1,94 @@
+<%# include('../partials/taskCard.ejs', { tasks:inProgress, //status:
+taskStatus.IN_PROGRESS}) のようにincludeする %>
+
+<div class="card">
+    <div class="card-header"><%= status %></div>
+    <ul class="list-group list-group-flush">
+        <% if (tasks.length) { %> <% tasks.forEach(task => { %>
+        <li class="list-group-item d-flex justify-content-between">
+            <a
+                href="#"
+                class="link-dark link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
+                data-bs-toggle="modal"
+                data-bs-target="#modal-<%= task._id %>"
+                ><%= task.title %></a
+            >
+            <!-- Modal -->
+            <div
+                class="modal fade"
+                id="modal-<%= task._id %>"
+                tabindex="-1"
+                aria-labelledby="modal-<%= task._id %>"
+                aria-hidden="true"
+            >
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div
+                            class="modal-header d-flex justify-content-between align-items-center"
+                        >
+                            <div>
+                                <h5
+                                    class="modal-title"
+                                    id="modalLabel-<%= task._id %>"
+                                >
+                                    <%= task.title %>
+                                </h5>
+                                <small>
+                                    <a
+                                        href="/projects/<%= task.project._id %>"
+                                        class="link-secondary link-offset-1 link-underline-opacity-0 link-underline-opacity-100-hover"
+                                        ><%= task.project.title %></a
+                                    >
+                                </small>
+                            </div>
+                            <button
+                                type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                            ></button>
+                        </div>
+                        <!-- Modal Body: Task description and status -->
+                        <div class="modal-body">
+                            <p class="mb-2"><%= task.description %></p>
+                            <small>
+                                <strong>ステータス:</strong>
+                                <%= task.status %>
+                            </small>
+                        </div>
+                        <!-- Modal Footer: Edit and Delete actions -->
+                        <div class="modal-footer">
+                            <a
+                                href="/tasks/<%= task._id %>/edit"
+                                class="btn btn-primary"
+                            >
+                                編集
+                            </a>
+                            <form
+                                action="/tasks/<%= task._id %>?_method=DELETE"
+                                method="post"
+                                class="d-inline"
+                            >
+                                <button type="submit" class="btn btn-danger">
+                                    削除
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <a
+                href="/projects/<%= task.project._id %>"
+                class="link-secondary link-offset-1 link-underline-opacity-0 link-underline-opacity-100-hover"
+                ><%= task.project.title %></a
+            >
+        </li>
+        <% }); %> <% } else { %>
+        <li class="list-group-item">
+            <span class="text-muted"> タスクはありません。 </span>
+        </li>
+
+        <% } %>
+    </ul>
+</div>

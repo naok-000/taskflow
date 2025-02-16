@@ -1,7 +1,16 @@
 <% layout('layouts/boilerplate.ejs') %>
 <div class="container mt-4">
     <div class="card shadow">
-        <div class="card-header">タスク編集</div>
+        <div class="card-header">
+            タスク編集 -
+            <small>
+                <a
+                    href="/projects/<%= task.project._id %>"
+                    class="link-secondary link-offset-1 link-underline-opacity-0 link-underline-opacity-100-hover"
+                    ><%= task.project.title %></a
+                >
+            </small>
+        </div>
         <div class="card-body">
             <form
                 action="/tasks/<%= task._id %>?_method=PATCH"

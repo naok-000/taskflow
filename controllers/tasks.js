@@ -27,7 +27,11 @@ module.exports.showTask = async (req, res) => {
 
 module.exports.renderEditForm = async (req, res) => {
     const id = req.params.id;
-    const task = await Task.findById(id);
+    const task = await Task.findById(id).populate("project");
+    if (!task) {
+        req.flash("error", "タスクが見つかりません");
+        return res.redirect("/tasks");
+    }
     res.render("tasks/edit", { task, taskStatus });
 };
 
@@ -37,7 +41,9 @@ module.exports.updateTask = async (req, res) => {
         runValidators: true,
         new: true,
     });
-    res.redirect(`/projects/${task.project._id}`);
+    const url = req.session.returnTo || `/projects/${task.project._id}`;
+    delete req.session.returnTo;
+    res.redirect(url);
 };
 
 module.exports.deleteTask = async (req, res) => {

@@ -7,117 +7,23 @@
             <h5 class="card-title"><%= project.title %></h5>
             <p class="card-text"><%= project.description %></p>
 
-            <!-- 新規タスク追加フォーム -->
-            <div class="mb-4">
-                <button
-                    class="btn btn-success"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#newTaskForm"
-                    aria-expanded="false"
-                    aria-controls="newTaskForm"
-                >
-                    新規タスク追加
-                </button>
-            </div>
-            <div class="collapse mb-4" id="newTaskForm">
-                <div class="card card-body">
-                    <h6 class="mb-3">新規タスク</h6>
-                    <form
-                        action="/projects/<%= project._id %>/tasks"
-                        method="post"
-                        class="needs-validation"
-                        novalidate
-                    >
-                        <div class="mb-3">
-                            <label for="taskTitle" class="form-label"
-                                >タイトル</label
-                            >
-                            <input
-                                type="text"
-                                id="taskTitle"
-                                name="task[title]"
-                                class="form-control"
-                                required
-                            />
-                            <div class="invalid-feedback">
-                                タイトルを入力してください
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="taskDescription" class="form-label"
-                                >詳細</label
-                            >
-                            <textarea
-                                id="taskDescription"
-                                name="task[description]"
-                                class="form-control"
-                                rows="3"
-                            ></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary">
-                            追加
-                        </button>
-                    </form>
+            <%- include('newForm.ejs') %>
+            <div class="row row-cols-1 row-cols-md-2 g-4">
+                <div class="col">
+                    <%- include('../partials/taskCard.ejs', { tasks:inProgress,
+                    status: taskStatus.IN_PROGRESS }) %>
                 </div>
-            </div>
-
-            <!-- Bootstrapタブ -->
-            <%- include('../partials/navtabs.ejs') %>
-            <div class="tab-content mt-3">
-                <!-- すべてのタスク -->
-                <div
-                    class="tab-pane fade show active"
-                    id="allTasks"
-                    role="tabpanel"
-                >
-                    <% if (tasks.length) { %>
-                    <div class="accordion mt-3">
-                        <% tasks.forEach(task => { %> <%-
-                        include('taskAccordionItem.ejs', { task }) %> <% }); %>
-                    </div>
-                    <% } else { %>
-                    <p>タスクが登録されていません。</p>
-                    <% } %>
-                </div>
-                <div class="tab-pane fade" id="notStarted" role="tabpanel">
-                    <div
-                        class="tab-pane fade show active"
-                        id="allTasks"
-                        role="tabpanel"
-                    >
-                        <% if (notStarted.length) { %>
-                        <div class="accordion mt-3">
-                            <% notStarted.forEach(task => { %> <%-
-                            include('taskAccordionItem.ejs',{task}) %> <% }); %>
-                        </div>
-
-                        <% } else { %>
-                        <p>未着手のタスクはありません。</p>
-                        <% } %>
+                <div class="col">
+                    <div class="col">
+                        <%- include('../partials/taskCard.ejs', {
+                        tasks:notStarted, status: taskStatus.NOT_STARTED }) %>
                     </div>
                 </div>
-                <div class="tab-pane fade" id="inProgress" role="tabpanel">
-                    <% if (inProgress.length) { %>
-
-                    <div class="accordion mt-3">
-                        <% inProgress.forEach(task => { %> <%-
-                        include('taskAccordionItem.ejs',{task}) %> <% }); %>
+                <div class="col">
+                    <div class="col">
+                        <%- include('../partials/taskCard.ejs', {
+                        tasks:completed, status: taskStatus.COMPLETED }) %>
                     </div>
-                    <% } else { %>
-                    <p>進行中のタスクはありません。</p>
-                    <% } %>
-                </div>
-                <div class="tab-pane fade" id="completed" role="tabpanel">
-                    <% if (completed.length) { %>
-                    <!-- アコーディオン -->
-                    <div class="accordion mt-3">
-                        <% completed.forEach(task => { %> <%-
-                        include('taskAccordionItem.ejs',{task}) %> <% }); %>
-                    </div>
-                    <% } else { %>
-                    <p>完了したタスクはありません。</p>
-                    <% } %>
                 </div>
             </div>
         </div>
