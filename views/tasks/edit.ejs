@@ -48,7 +48,7 @@
                 <div class="mb-3">
                     <label class="form-label d-block">ステータス</label>
                     <% Object.entries(taskStatus).forEach(([key, value]) => { %>
-                    <div class="form-check form-check-inline">
+                    <div class="form-check">
                         <input class="form-check-input" type="radio"
                         name="task[status]" id="status-<%= key %>" value="<%=
                         value %>" <%= task.status === value ? "checked" : "" %>
@@ -60,10 +60,7 @@
                     <% }); %>
                 </div>
                 <button type="submit" class="btn btn-primary">更新</button>
-                <a
-                    href="/projects/<%= task.project._id %>"
-                    class="btn btn-secondary ms-2"
-                >
+                <a href="<%= returnTo %>" class="btn btn-secondary ms-2">
                     キャンセル
                 </a>
             </form>

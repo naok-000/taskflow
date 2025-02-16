@@ -32,7 +32,8 @@ module.exports.renderEditForm = async (req, res) => {
         req.flash("error", "タスクが見つかりません");
         return res.redirect("/tasks");
     }
-    res.render("tasks/edit", { task, taskStatus });
+    const returnTo = req.session.returnTo || `/projects/${task.project._id}`;
+    res.render("tasks/edit", { task, taskStatus, returnTo });
 };
 
 module.exports.updateTask = async (req, res) => {
@@ -49,5 +50,7 @@ module.exports.updateTask = async (req, res) => {
 module.exports.deleteTask = async (req, res) => {
     const id = req.params.id;
     await Task.findByIdAndDelete(id);
-    res.redirect("/tasks");
+    const url = req.session.returnTo || `/projects/${task.project._id}`;
+    delete req.session.returnTo;
+    res.redirect(url);
 };
