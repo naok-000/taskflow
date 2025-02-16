@@ -1,8 +1,13 @@
-const Task = require("../models/tasks");
+const Project = require("../models/project");
+const Task = require("../models/task");
 const taskStatus = require("../constants/taskStatus");
 
 module.exports.index = async (req, res) => {
-    const tasks = await Task.find({}).populate("project");
+    const projectIds = await Project.find({ owner: req.user._id });
+    console.log(projectIds);
+    const tasks = await Task.find({
+        project: { $in: projectIds },
+    }).populate("project");
     const notStarted = tasks.filter(
         (task) => task.status === taskStatus.NOT_STARTED
     );

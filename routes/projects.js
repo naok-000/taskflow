@@ -5,6 +5,7 @@ const {
     validateProject,
     validateTask,
     saveReturnTo,
+    isProjectOwner,
 } = require("../middlewares");
 const projectsControllers = require("../controllers/projects");
 
@@ -15,14 +16,27 @@ router
 
 router
     .route("/:projectId")
-    .get(saveReturnTo, catchAsync(projectsControllers.showProject))
-    .patch(validateProject, catchAsync(projectsControllers.updateProject))
-    .delete(catchAsync(projectsControllers.deleteProject));
+    .get(
+        isProjectOwner,
+        saveReturnTo,
+        catchAsync(projectsControllers.showProject)
+    )
+    .patch(
+        isProjectOwner,
+        validateProject,
+        catchAsync(projectsControllers.updateProject)
+    )
+    .delete(isProjectOwner, catchAsync(projectsControllers.deleteProject));
 
-router.get("/:projectId/edit", catchAsync(projectsControllers.renderEditForm));
+router.get(
+    "/:projectId/edit",
+    isProjectOwner,
+    catchAsync(projectsControllers.renderEditForm)
+);
 
 router.post(
     "/:projectId/tasks",
+    isProjectOwner,
     validateTask,
     catchAsync(projectsControllers.createTask)
 );

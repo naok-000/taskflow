@@ -9,6 +9,10 @@ const projectSchema = new Schema({
     description: {
         type: String,
     },
+    owner: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+    },
 });
 
 module.exports = mongoose.model("Project", projectSchema);

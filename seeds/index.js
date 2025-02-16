@@ -1,8 +1,8 @@
 // シードデータを挿入するためのファイル
 // MongoDBに接続し、シードデータを挿入する
 const mongoose = require("mongoose");
-const Task = require("../models/tasks");
-const Project = require("../models/projects");
+const Task = require("../models/task");
+const Project = require("../models/project");
 
 // MongoDBに接続
 mongoose
@@ -82,6 +82,7 @@ const seedDB = async () => {
     for (const projectData of projectsData) {
         const tasksData = tasksListData[index];
         const project = new Project(projectData);
+        project.owner = "67b1e62a0ca2bfddc4e94f46";
         await project.save();
         for (const taskData of tasksData) {
             const task = new Task(taskData);

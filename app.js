@@ -3,18 +3,22 @@
 const express = require("express");
 const ejsMate = require("ejs-mate");
 const mongoose = require("mongoose");
+const path = require("path");
 const methodOverride = require("method-override");
 const flash = require("connect-flash");
 const session = require("express-session");
-const path = require("path");
+const passport = require("passport");
+const LocalStrategy = require("passport-local");
+const User = require("./models/user");
 
 const ExpressError = require("./utils/ExpressError");
 const catchAsync = require("./utils/catchAsync");
-const { validateTask } = require("./middlewares");
-const Task = require("./models/tasks");
+const { validateTask, isLoggedIn } = require("./middlewares");
+const Task = require("./models/task");
 const taskStatus = require("./constants/taskStatus");
 const tasksRoutes = require("./routes/tasks");
 const projectsRoutes = require("./routes/projects");
+const usersRoutes = require("./routes/users");
 
 const app = express();
 const port = 3000;
@@ -50,11 +54,19 @@ const sessionConfig = {
 app.use(session(sessionConfig)); // セッションを有効にする
 app.use(flash()); // フラッシュメッセージを有効にする
 
+// ユーザー認証の設定
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
 app.use((req, res, next) => {
     res.locals.taskStatus = taskStatus;
     res.locals.currentRoute = req.path;
     res.locals.success = req.flash("success");
     res.locals.error = req.flash("error");
+    res.locals.currentUser = req.user;
     next();
 });
 
@@ -62,8 +74,9 @@ app.get("/", (req, res) => {
     res.render("home");
 });
 
-app.use("/tasks", tasksRoutes);
-app.use("/projects", projectsRoutes);
+app.use("/tasks", isLoggedIn, tasksRoutes);
+app.use("/projects", isLoggedIn, projectsRoutes);
+app.use("/", usersRoutes);
 
 app.all("*", (req, res, next) => {
     next(new ExpressError("ページが見つかりません", 404));

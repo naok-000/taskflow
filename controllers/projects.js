@@ -1,14 +1,16 @@
-const Project = require("../models/projects");
-const Task = require("../models/tasks");
+const Project = require("../models/project");
+const Task = require("../models/task");
 const taskStatus = require("../constants/taskStatus");
 
 module.exports.index = async (req, res) => {
-    const projects = await Project.find({});
+    const projects = await Project.find({ owner: req.user._id });
     res.render("projects/index", { projects });
 };
 
 module.exports.createProject = async (req, res) => {
     const project = new Project(req.body.project);
+    project.owner = req.user._id;
+    console.log(project);
     await project.save();
     res.redirect("/projects");
 };
