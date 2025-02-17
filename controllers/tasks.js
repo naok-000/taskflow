@@ -20,15 +20,15 @@ module.exports.index = async (req, res) => {
     res.render("tasks/index", { tasks, notStarted, inProgress, completed });
 };
 
-module.exports.showTask = async (req, res) => {
-    const id = req.params.id;
-    const task = await Task.findById(id);
-    if (!task) {
-        req.flash("error", "タスクが見つかりません");
-        return res.redirect("/tasks");
-    }
-    res.render("tasks/show", { task, taskStatus });
-};
+// module.exports.showTask = async (req, res) => {
+//     const id = req.params.id;
+//     const task = await Task.findById(id);
+//     if (!task) {
+//         req.flash("error", "タスクが見つかりません");
+//         return res.redirect("/tasks");
+//     }
+//     res.render("tasks/show", { task, taskStatus });
+// };
 
 module.exports.renderEditForm = async (req, res) => {
     const id = req.params.id;
@@ -49,13 +49,15 @@ module.exports.updateTask = async (req, res) => {
     });
     const url = req.session.returnTo || `/projects/${task.project._id}`;
     delete req.session.returnTo;
+    req.flash("success", `'${task.title}'を更新しました`);
     res.redirect(url);
 };
 
 module.exports.deleteTask = async (req, res) => {
     const id = req.params.id;
-    await Task.findByIdAndDelete(id);
+    const task = await Task.findByIdAndDelete(id);
     const url = req.session.returnTo || `/projects/${task.project._id}`;
     delete req.session.returnTo;
+    req.flash("success", `'${task.title}'を削除しました`);
     res.redirect(url);
 };

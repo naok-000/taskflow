@@ -5,6 +5,7 @@ module.exports.renderLogin = (req, res) => {
 };
 
 module.exports.login = (req, res) => {
+    req.flash("success", `${req.user.username}さん、おかえりなさい！`);
     res.redirect("/projects");
 };
 
@@ -19,6 +20,7 @@ module.exports.register = async (req, res) => {
         const registeredUser = await User.register(user, password);
         req.login(registeredUser, (err) => {
             if (err) return next(err);
+            req.flash("success", "TaskFlowへようこそ！");
             res.redirect("/projects");
         });
     } catch (e) {
@@ -32,6 +34,7 @@ module.exports.logout = (req, res) => {
         if (err) {
             return next(err);
         }
+        req.flash("success", "ログアウトしました");
         res.redirect("/");
     });
 };

@@ -8,7 +8,7 @@ router.get("/", saveReturnTo, catchAsync(tasksControllers.index));
 
 router
     .route("/:id")
-    .get(isTaskOwner, saveReturnTo, catchAsync(tasksControllers.showTask))
+    // .get(isTaskOwner, saveReturnTo, catchAsync(tasksControllers.showTask))
     .patch(isTaskOwner, validateTask, catchAsync(tasksControllers.updateTask))
     .delete(isTaskOwner, catchAsync(tasksControllers.deleteTask));
 

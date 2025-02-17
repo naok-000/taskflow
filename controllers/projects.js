@@ -12,6 +12,7 @@ module.exports.createProject = async (req, res) => {
     project.owner = req.user._id;
     console.log(project);
     await project.save();
+    req.flash("success", `'${project.title}'を作成しました`);
     res.redirect("/projects");
 };
 
@@ -57,6 +58,7 @@ module.exports.updateProject = async (req, res) => {
             new: true,
         }
     );
+    req.flash("success", `'${project.title}'を更新しました`);
     res.redirect(`/projects/${project._id}`);
 };
 
@@ -64,6 +66,7 @@ module.exports.deleteProject = async (req, res) => {
     const projectId = req.params.projectId;
     await Task.deleteMany({ project: projectId });
     await Project.findByIdAndDelete(projectId);
+    req.flash("success", `'${project.title}'を削除しました`);
     res.redirect("/projects");
 };
 
@@ -72,5 +75,6 @@ module.exports.createTask = async (req, res) => {
     const task = new Task(req.body.task);
     task.project = projectId;
     await task.save();
+    req.flash("success", `'${task.title}'を追加しました`);
     res.redirect(`/projects/${projectId}`);
 };
