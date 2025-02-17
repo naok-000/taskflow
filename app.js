@@ -26,7 +26,7 @@ const projectsRoutes = require("./routes/projects");
 const usersRoutes = require("./routes/users");
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // MongoDBに接続
 const dbUrl = process.env.DB_URL || "mongodb://127.0.0.1:27017/taskflow";
