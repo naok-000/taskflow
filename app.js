@@ -1,5 +1,8 @@
 // アプリのエントリーポイント
 // サーバーを起動する
+if (process.env.NODE_ENV !== "production") {
+    require("dotenv").config();
+}
 const express = require("express");
 const ejsMate = require("ejs-mate");
 const mongoose = require("mongoose");
@@ -12,10 +15,10 @@ const LocalStrategy = require("passport-local");
 const User = require("./models/user");
 const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
+const MongoStore = require("connect-mongo");
 
 const ExpressError = require("./utils/ExpressError");
-const catchAsync = require("./utils/catchAsync");
-const { validateTask, isLoggedIn } = require("./middlewares");
+const { isLoggedIn } = require("./middlewares");
 const Task = require("./models/task");
 const taskStatus = require("./constants/taskStatus");
 const tasksRoutes = require("./routes/tasks");
@@ -26,8 +29,7 @@ const app = express();
 const port = 3000;
 
 // MongoDBに接続
-// const dbUrl = process.env.DB_URL || "mongodb://127.0.0.1:27017/taskflow";
-const dbUrl = "mongodb://127.0.0.1:27017/taskflow";
+const dbUrl = process.env.DB_URL || "mongodb://127.0.0.1:27017/taskflow";
 mongoose
     .connect(dbUrl)
     .then(() => {
@@ -46,12 +48,29 @@ app.use(express.static("public")); // 静的ファイルのディレクトリを
 app.use(express.urlencoded({ extended: true })); // フォームデータを解析するミドルウェア
 app.use(methodOverride("_method")); // HTTPメソッドを上書きするミドルウェア
 app.use(express.static(path.join(__dirname, "public"))); // 静的ファイルのディレクトリを指定
+const secret = process.env.SECRET || "mysecret";
+
+const store = MongoStore.create({
+    mongoUrl: dbUrl,
+    crypto: {
+        secret,
+    },
+    touchAfter: 24 * 3600, // time period in seconds
+});
+
+store.on("error", (e) => {
+    console.log("セッションストアエラー", e);
+});
+
 const sessionConfig = {
-    secret: "mysecert",
+    store,
+    name: "session",
+    secret,
     resave: false,
     saveUninitialized: true,
     cookie: {
         httpOnly: true,
+        // secure: true,
         maxAge: 1000 * 60 * 60 * 24 * 7,
     },
 };
