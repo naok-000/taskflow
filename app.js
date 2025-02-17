@@ -10,6 +10,8 @@ const session = require("express-session");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user");
+const helmet = require("helmet");
+const mongoSanitize = require("express-mongo-sanitize");
 
 const ExpressError = require("./utils/ExpressError");
 const catchAsync = require("./utils/catchAsync");
@@ -24,8 +26,10 @@ const app = express();
 const port = 3000;
 
 // MongoDBに接続
+// const dbUrl = process.env.DB_URL || "mongodb://127.0.0.1:27017/taskflow";
+const dbUrl = "mongodb://127.0.0.1:27017/taskflow";
 mongoose
-    .connect("mongodb://127.0.0.1:27017/taskflow")
+    .connect(dbUrl)
     .then(() => {
         console.log("MongoDB connected");
     })
@@ -53,6 +57,34 @@ const sessionConfig = {
 };
 app.use(session(sessionConfig)); // セッションを有効にする
 app.use(flash()); // フラッシュメッセージを有効にする
+
+// セキュリティ対策
+const scriptSrcUrls = ["https://cdn.jsdelivr.net"];
+const styleSrcUrls = ["https://cdn.jsdelivr.net"];
+const connectSrcUrls = [];
+const fontSrcUrls = ["https://cdn.jsdelivr.net"];
+const imgSrcUrls = ["https://images.unsplash.com"];
+app.use(helmet());
+app.use(
+    helmet.contentSecurityPolicy({
+        directives: {
+            defaultSrc: [],
+            connectSrc: ["'self'", ...connectSrcUrls],
+            scriptSrc: ["'unsafe-inline'", "'self'", ...scriptSrcUrls],
+            styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
+            workerSrc: ["'self'", "blob:"],
+            childSrc: ["blob:"],
+            objectSrc: [],
+            imgSrc: ["'self'", "blob:", "data:", ...imgSrcUrls],
+            fontSrc: ["'self'", ...fontSrcUrls],
+        },
+    })
+);
+app.use(
+    mongoSanitize({
+        replaceWith: "_",
+    })
+);
 
 // ユーザー認証の設定
 app.use(passport.initialize());
