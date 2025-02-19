@@ -29,7 +29,13 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // MongoDBに接続
-const dbUrl = process.env.DB_URL || "mongodb://127.0.0.1:27017/taskflow";
+let dbUrl;
+if (process.env.NODE_ENV !== "production") {
+    dbUrl = "mongodb://127.0.0.1:27017/taskflow";
+} else {
+    dbUrl = process.env.DB_URL;
+}
+
 mongoose
     .connect(dbUrl)
     .then(() => {
