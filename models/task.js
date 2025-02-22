@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const taskStatus = require("../constants/taskStatus");
 const Schema = mongoose.Schema;
 
+// タスクのスキーマを定義
 const taskSchema = new Schema({
     title: {
         type: String,

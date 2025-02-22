@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const passportLocalMongoose = require("passport-local-mongoose");
 
+// ユーザーのスキーマを定義
 const UserSchema = new Schema({
     email: {
         type: String,
@@ -10,6 +11,7 @@ const UserSchema = new Schema({
     },
 });
 
+// passport-local-mongooseを使ってユーザー認証を追加
 UserSchema.plugin(passportLocalMongoose, {
     errorMessages: {
         MissingPasswordError: "パスワードを入力してください",

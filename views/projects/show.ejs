@@ -1,3 +1,4 @@
+<!-- プロジェクト詳細画面 -->
 <% layout('layouts/boilerplate.ejs') %>
 <div class="container mt-4">
     <div class="card shadow">
@@ -7,6 +8,7 @@
             <h5 class="card-title"><%= project.title %></h5>
             <p class="card-text"><%= project.description %></p>
 
+            <!-- タスク追加フォームを挿入 -->
             <%- include('newForm.ejs') %>
             <div class="row row-cols-1 row-cols-md-2 g-4">
                 <div class="col">

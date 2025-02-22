@@ -1,7 +1,9 @@
+// タスクのコントローラー
 const Project = require("../models/project");
 const Task = require("../models/task");
 const taskStatus = require("../constants/taskStatus");
 
+// タスク一覧を表示
 module.exports.index = async (req, res) => {
     const projectIds = await Project.find({ owner: req.user._id });
     console.log(projectIds);
@@ -30,6 +32,7 @@ module.exports.index = async (req, res) => {
 //     res.render("tasks/show", { task, taskStatus });
 // };
 
+// タスクの編集フォームを表示
 module.exports.renderEditForm = async (req, res) => {
     const id = req.params.id;
     const task = await Task.findById(id).populate("project");
@@ -41,6 +44,7 @@ module.exports.renderEditForm = async (req, res) => {
     res.render("tasks/edit", { task, taskStatus, returnTo });
 };
 
+// タスクを更新
 module.exports.updateTask = async (req, res) => {
     const id = req.params.id;
     const task = await Task.findByIdAndUpdate(id, req.body.task, {
@@ -53,6 +57,7 @@ module.exports.updateTask = async (req, res) => {
     res.redirect(url);
 };
 
+// タスクを削除
 module.exports.deleteTask = async (req, res) => {
     const id = req.params.id;
     const task = await Task.findByIdAndDelete(id);

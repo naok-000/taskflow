@@ -56,6 +56,7 @@ app.use(methodOverride("_method")); // HTTPメソッドを上書きするミド�
 app.use(express.static(path.join(__dirname, "public"))); // 静的ファイルのディレクトリを指定
 const secret = process.env.SECRET || "mysecret";
 
+// セッションの設定
 const store = MongoStore.create({
     mongoUrl: dbUrl,
     crypto: {
@@ -118,6 +119,7 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+// ローカル変数を設定
 app.use((req, res, next) => {
     res.locals.taskStatus = taskStatus;
     res.locals.currentRoute = req.path;
@@ -127,6 +129,7 @@ app.use((req, res, next) => {
     next();
 });
 
+// ルーティング
 app.get("/", (req, res) => {
     res.render("home");
 });
@@ -139,12 +142,14 @@ app.all("*", (req, res, next) => {
     next(new ExpressError("ページが見つかりません", 404));
 });
 
+// エラーハンドリング
 app.use((err, req, res, next) => {
     const { statusCode = 500, message = "問題が起きました" } = err;
     // res.status(statusCode).send(message);
     res.status(statusCode).render("error", { err });
 });
 
+// サーバーを起動
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });

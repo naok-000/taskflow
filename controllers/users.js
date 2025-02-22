@@ -1,18 +1,23 @@
+// ユーザー関連のコントローラー
 const User = require("../models/user");
 
+// ログインフォームを表示
 module.exports.renderLogin = (req, res) => {
     res.render("users/login");
 };
 
+// ログイン処理
 module.exports.login = (req, res) => {
     req.flash("success", `${req.user.username}さん、おかえりなさい！`);
     res.redirect("/projects");
 };
 
+// ユーザー登録フォームを表示
 module.exports.renderRegister = (req, res) => {
     res.render("users/register");
 };
 
+// ユーザー登録処理
 module.exports.register = async (req, res) => {
     try {
         const { username, email, password } = req.body;
@@ -29,6 +34,7 @@ module.exports.register = async (req, res) => {
     }
 };
 
+// ログアウト処理
 module.exports.logout = (req, res) => {
     req.logout((err) => {
         if (err) {

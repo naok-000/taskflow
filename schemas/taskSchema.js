@@ -1,6 +1,8 @@
-const Joi = require("./joiHtmlEscape");
+// Joiスキーマの定義
+const Joi = require("./joiExtension");
 const taskStatus = require("../constants/taskStatus");
 
+// タスクのスキーマを定義
 const taskSchema = Joi.object({
     task: Joi.object({
         title: Joi.string().required().escapeHTML(),

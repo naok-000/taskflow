@@ -1,9 +1,11 @@
+// expressのミドルウェアを定義するファイル
 const taskSchema = require("./schemas/taskSchema");
 const projectSchema = require("./schemas/projectSchema");
 const ExpressError = require("./utils/ExpressError");
 const Project = require("./models/project");
 const Task = require("./models/task");
 
+// taskのバリデーション
 module.exports.validateTask = (req, res, next) => {
     const { error } = taskSchema.validate(req.body);
     if (error) {
@@ -14,6 +16,7 @@ module.exports.validateTask = (req, res, next) => {
     }
 };
 
+// projectのバリデーション
 module.exports.validateProject = (req, res, next) => {
     const { error } = projectSchema.validate(req.body);
     if (error) {
@@ -24,11 +27,13 @@ module.exports.validateProject = (req, res, next) => {
     }
 };
 
+// 現在のURLをセッションに保存
 module.exports.saveReturnTo = (req, res, next) => {
     req.session.returnTo = req.originalUrl;
     next();
 };
 
+// ログインしているか確認
 module.exports.isLoggedIn = (req, res, next) => {
     if (!req.isAuthenticated()) {
         req.session.returnTo = req.originalUrl;
@@ -38,6 +43,7 @@ module.exports.isLoggedIn = (req, res, next) => {
     next();
 };
 
+// プロジェクトのオーナーか確認
 module.exports.isProjectOwner = async (req, res, next) => {
     const projectId = req.params.projectId;
     const project = await Project.findById(projectId);
@@ -48,6 +54,7 @@ module.exports.isProjectOwner = async (req, res, next) => {
     next();
 };
 
+// タスクのオーナーか確認
 module.exports.isTaskOwner = async (req, res, next) => {
     const taskId = req.params.id;
     const task = await Task.findById(taskId).populate("project");

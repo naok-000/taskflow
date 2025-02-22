@@ -1,3 +1,4 @@
+// TaskStatusの定数を定義するファイル
 const TaskStatus = Object.freeze({
     NOT_STARTED: "未着手",
     IN_PROGRESS: "進行中",

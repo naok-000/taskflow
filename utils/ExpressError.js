@@ -1,3 +1,4 @@
+// エラーハンドリング用のクラスを作成する
 class ExpressError extends Error {
     constructor(message, statusCode) {
         super();

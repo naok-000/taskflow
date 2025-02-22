@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+// プロジェクトのスキーマを定義
 const projectSchema = new Schema({
     title: {
         type: String,

@@ -1,12 +1,15 @@
+// プロジェクトのコントローラー
 const Project = require("../models/project");
 const Task = require("../models/task");
 const taskStatus = require("../constants/taskStatus");
 
+// プロジェクト一覧を表示
 module.exports.index = async (req, res) => {
     const projects = await Project.find({ owner: req.user._id });
     res.render("projects/index", { projects });
 };
 
+// プロジェクトを作成
 module.exports.createProject = async (req, res) => {
     const project = new Project(req.body.project);
     project.owner = req.user._id;
@@ -16,6 +19,7 @@ module.exports.createProject = async (req, res) => {
     res.redirect("/projects");
 };
 
+// プロジェクトの詳細を表示
 module.exports.showProject = async (req, res) => {
     const projectId = req.params.projectId;
     const project = await Project.findById(projectId);
@@ -42,12 +46,14 @@ module.exports.showProject = async (req, res) => {
     });
 };
 
+// プロジェクトの編集フォームを表示
 module.exports.renderEditForm = async (req, res) => {
     const projectId = req.params.projectId;
     const project = await Project.findById(projectId);
     res.render("projects/edit", { project });
 };
 
+// プロジェクトを更新
 module.exports.updateProject = async (req, res) => {
     const projectId = req.params.projectId;
     const project = await Project.findByIdAndUpdate(
@@ -62,6 +68,7 @@ module.exports.updateProject = async (req, res) => {
     res.redirect(`/projects/${project._id}`);
 };
 
+// プロジェクトを削除
 module.exports.deleteProject = async (req, res) => {
     const projectId = req.params.projectId;
     await Task.deleteMany({ project: projectId });
@@ -70,6 +77,7 @@ module.exports.deleteProject = async (req, res) => {
     res.redirect("/projects");
 };
 
+// タスクを作成
 module.exports.createTask = async (req, res) => {
     const projectId = req.params.projectId;
     const task = new Task(req.body.task);
