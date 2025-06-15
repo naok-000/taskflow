@@ -14,7 +14,8 @@ TaskFlow は、ユーザーが自分のプロジェクトとタスクを直感�
 
 ## デプロイ先
 
-このアプリは [Render](https://taskflow-qoay.onrender.com/) にデプロイされています。
+このアプリはRenderにデプロイされています。
+[ここ](https://taskflow-qoay.onrender.com/) からアクセスし、ご利用いただけます。
 
 ## 実行環境
 
